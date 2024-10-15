@@ -9,7 +9,8 @@ class IfoamNewsletterApi {
     'email',
     'organization',
     'job_title',
-    'newsletter_type',
+    'receive_newsletter',
+    'receive_press_releases',
     'api_key',
   ];
 
@@ -35,7 +36,7 @@ class IfoamNewsletterApi {
     return $response;
   }
 
-  private function getContactByEmail(string $email): array {
+  private function getContactByEmail(string $email): ?array {
     return \Civi\Api4\Contact::get(FALSE)
       ->addSelect('id')
       ->addJoin('Email AS email', 'INNER', ['id', '=', 'email.contact_id'], ['email.is_primary', '=', 1])
@@ -50,10 +51,10 @@ class IfoamNewsletterApi {
   private function createContact(array $params): array {
     $contact = \Civi\Api4\Contact::create(FALSE)
       ->addValue('contact_type', 'Individual')
-      ->addValue('first_name', '')
-      ->addValue('last_name', '')
-      ->addValue('job_title', '')
-      ->addValue('Newsletter_subscriptions.Organisation_name_as_submitted', '')
+      ->addValue('first_name', $params['first_name'])
+      ->addValue('last_name', $params['last_name'])
+      ->addValue('job_title', $params['job_title'])
+      ->addValue('Newsletter_subscriptions.Organisation_name_as_submitted', $params['organization'])
       ->execute()
       ->first();
 
@@ -74,9 +75,9 @@ class IfoamNewsletterApi {
       $newsletterCustomField = 'Newsletter_subscriptions.IFOAM_EU_press_release';
     }
 
-    $results = \Civi\Api4\Contact::update(TRUE)
+    $results = \Civi\Api4\Contact::update(FALSE)
       ->addValue($newsletterCustomField, 1)
-      ->addWhere('id', '=', 1)
+      ->addWhere('id', '=', $contact['id'])
       ->execute();
   }
 }

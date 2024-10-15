@@ -40,17 +40,13 @@ class IfoamNewsletterController {
         return [FALSE, "Missing field '$expectedField' in POSTed data", []];
       }
 
-      // store a sanitized version of the param
-      //$sanitizeFilter = ($expectedField == 'email') ? FILTER_SANITIZE_EMAIL : FILTER_SANITIZE_STRING;
-      //$params[$expectedField] = filter_input(INPUT_POST, $expectedField, $sanitizeFilter);
-      $params[$expectedField] = $data[$expectedField];
+      $params[$expectedField] = strip_tags($data[$expectedField]);
     }
 
-    //if (!is_string(IFOAM_NEWSLETTER_API_KEY)) {
-    //  return [FALSE, 'Cannot validate API KEY: not defined on server.', []];
-    //}
-echo "\n\n\n" . $params['api_key'] . "\n\n";
-    var_dump($params);
+    if (!defined('IFOAM_NEWSLETTER_API_KEY')) {
+      return [FALSE, 'Cannot validate API KEY: not defined on server.', []];
+    }
+
     // check the api_key
     if ($params['api_key'] != IFOAM_NEWSLETTER_API_KEY) {
       return [FALSE, 'API KEY is not valid.', []];

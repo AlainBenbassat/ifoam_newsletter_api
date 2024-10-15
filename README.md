@@ -13,7 +13,8 @@ POST the following JSON object to register a new subscription:
   "email": "SOME EMAIL",
   "organization": "SOME ORGANIZATION NAME",
   "job_title": "SOME JOB TITLE",
-  "newsletter_type": "newsletter" | "press",
+  "receive_newsletter": TRUE | FALSE,
+  "receive_press_releases": TRUE | FALSE,
   "api_key": "YOUR SECRET API KEY"
 }
 ```

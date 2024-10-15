@@ -13,9 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function ifoam_newsletter_api() {
-  require_once __DIR__ . '/src/ifoam_newsletter_controller.php';
-  $response = IfoamNewsletterController::process();
-  wp_send_json($response);
+  if (!is_admin()) {
+    require_once __DIR__ . '/src/ifoam_newsletter_controller.php';
+    $response = IfoamNewsletterController::process();
+    wp_send_json($response);
+  }
 }
 
 add_shortcode('newsletter-api', 'ifoam_newsletter_api');
