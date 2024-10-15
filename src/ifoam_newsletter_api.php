@@ -23,7 +23,7 @@ class IfoamNewsletterApi {
         $contact = $this->createContact($params);
       }
 
-      $this->subscribeContactToNewsletter($contact, $params['newsletter_type']);
+      $this->subscribeContactToNewsletter($contact, $params);
 
       $response->status = 'success';
       $response->message = '';
@@ -67,17 +67,19 @@ class IfoamNewsletterApi {
     return $contact;
   }
 
-  public function subscribeContactToNewsletter(array $contact, string $newsletter_type) {
-    if ($newsletter_type == 'newsletter') {
-      $newsletterCustomField = 'Newsletter_subscriptions.IFOAM_EU_newsletter';
-    }
-    else {
-      $newsletterCustomField = 'Newsletter_subscriptions.IFOAM_EU_press_release';
+  public function subscribeContactToNewsletter(array $contact, array $params) {
+    if ($params['receive_newsletter'] == TRUE) {
+      \Civi\Api4\Contact::update(FALSE)
+        ->addValue('Newsletter_subscriptions.IFOAM_EU_newsletter', 1)
+        ->addWhere('id', '=', $contact['id'])
+        ->execute();
     }
 
-    $results = \Civi\Api4\Contact::update(FALSE)
-      ->addValue($newsletterCustomField, 1)
-      ->addWhere('id', '=', $contact['id'])
-      ->execute();
+    if ($params['receive_press_releases'] == TRUE) {
+      \Civi\Api4\Contact::update(FALSE)
+        ->addValue('Newsletter_subscriptions.IFOAM_EU_press_release', 1)
+        ->addWhere('id', '=', $contact['id'])
+        ->execute();
+    }
   }
 }
