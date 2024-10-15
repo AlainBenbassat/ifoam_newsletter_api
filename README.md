@@ -26,6 +26,6 @@ A JSON object
 ```
 {
   "status": "success" | "error",
-  "description": "SOME DESCRIPTION"
+  "message": "POSSIBLE ERROR MESSAGE"
 }
 ```
